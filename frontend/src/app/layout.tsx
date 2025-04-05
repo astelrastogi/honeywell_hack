@@ -30,28 +30,23 @@ export default function RootLayout({
       >
         <div className="flex flex-col min-h-screen">
           {/* Header */}
-          <header className="bg-blue-400 text-white shadow-sm sticky top-0 z-50">
+          <header className="bg-red-900 text-white shadow-sm sticky top-0 z-50">
             <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-              <div>
-                <h1 className="text-xl font-bold">⚙️ Machine Monitoring</h1>
-                <p className="text-sm text-blue-200">Real-time insights powered by AI</p>
+              <div className="flex items-center space-x-4">
+                <div>
+                  <h1 className="text-xl font-bold leading-tight">SmartOps</h1>
+                  <p className="text-sm text-blue-100">AI-powered insights for operational excellence</p>
+                </div>
               </div>
-              <nav className="hidden md:flex space-x-6 text-sm font-medium">
-                <Link href="/" className="hover:text-yellow-300">Dashboard</Link>
-                <Link href="/machines" className="hover:text-yellow-300">Machines</Link>
-                <Link href="/analytics" className="hover:text-yellow-300">Analytics</Link>
-                <Link href="/settings" className="hover:text-yellow-300">Settings</Link>
-              </nav>
-              <div className="md:hidden">
-                {/* Placeholder for mobile menu toggle */}
-                <button className="text-white">
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
+
+              <div className="hidden md:flex items-center space-x-4">
+              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-white text-blue-500 font-semibold border border-white">
+                A
               </div>
             </div>
+            </div>
           </header>
+
 
           {/* Main Content */}
           <main className="flex-1 container mx-auto px-4 py-6">
