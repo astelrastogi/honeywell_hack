@@ -15,13 +15,36 @@ export default function HomePage() {
   const [showSimulation, setShowSimulation] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | null>(null);
 
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     try {
+  //       setIsLoading(true);
+  //       const data = await fetchMachineData();
+  //       setMachineData(data);
+  //       const suggestionsData = await fetchSuggestions(data);
+  //       setSuggestions(suggestionsData);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError('Failed to load data. Please try again.');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   loadData();
+
+  //   const interval = setInterval(loadData, 30000);
+  //   return () => clearInterval(interval);
+  // }, []);
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
         const data = await fetchMachineData();
+        console.log('Fetched machine data:', data);
         setMachineData(data);
         const suggestionsData = await fetchSuggestions(data);
+        console.log('Fetched suggestions:', suggestionsData);
         setSuggestions(suggestionsData);
       } catch (err) {
         console.error(err);
@@ -30,10 +53,9 @@ export default function HomePage() {
         setIsLoading(false);
       }
     };
-
+  
     loadData();
-
-    const interval = setInterval(loadData, 30000);
+    const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
   }, []);
 

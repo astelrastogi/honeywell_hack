@@ -16,7 +16,7 @@ def get_latest_status():
 
     if not row:
         return None
-
+    return dict(row)
     return {
         "timestamp": row["timestamp"],
         "temperature": f"{row['temperature']} °C",
