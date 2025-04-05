@@ -8,12 +8,12 @@ def generate_and_post_mock_data():
         data = {
             "temperature": round(random.uniform(65, 85), 1),  # 65-85 °C
             "pressure": round(random.uniform(120, 150), 1),   # 120-150 PSI
-            "vibration": round(random.uniform(0.1, 0.5), 2),  # 0.1-0.5 mm/s
-            "power": round(random.uniform(45, 65), 1),        # 45-65 kW
-            "status": "operational",
-            "uptime": "14d 6h 23m",
-            "efficiency": round(random.uniform(80, 95), 1),   # 80-95%
-            "operator": "OP-4872"
+            # "vibration": round(random.uniform(0.1, 0.5), 2),  # 0.1-0.5 mm/s
+            # "power": round(random.uniform(45, 65), 1),        # 45-65 kW
+            # "status": "operational",
+            # "uptime": "14d 6h 23m",
+            # "efficiency": round(random.uniform(80, 95), 1),   # 80-95%
+            # "operator": "OP-4872"
         }
 
         # Post the data to the /api/sensor-data endpoint

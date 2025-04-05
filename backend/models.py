@@ -6,27 +6,28 @@ def get_latest_status():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT timestamp, temperature, pressure, vibration, power, status, uptime, efficiency, operator
+        SELECT timestamp, temperature, pressure
         FROM machine_status
         ORDER BY timestamp DESC
         LIMIT 1
     """)
+    # vibration, power, status, uptime, efficiency, operator
     row = cursor.fetchone()
     conn.close()
 
     if not row:
         return None
     return dict(row)
-    return {
-        "timestamp": row["timestamp"],
-        "temperature": f"{row['temperature']} °C",
-        "pressure": f"{row['pressure']} PSI",
-        "vibration": f"{row['vibration']} mm/s",
-        "power": f"{row['power']} kW",
-        "status": row["status"],
-        "uptime": row["uptime"],
-        "efficiency": row["efficiency"],
-        "operator": row["operator"],
-        "message": "Data loaded from database!"
-    }
+    # return {
+    #     "timestamp": row["timestamp"],
+    #     "temperature": f"{row['temperature']} °C",
+    #     "pressure": f"{row['pressure']} PSI",
+    #     "vibration": f"{row['vibration']} mm/s",
+    #     "power": f"{row['power']} kW",
+    #     "status": row["status"],
+    #     "uptime": row["uptime"],
+    #     "efficiency": row["efficiency"],
+    #     "operator": row["operator"],
+    #     "message": "Data loaded from database!"
+    # }
 
