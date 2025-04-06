@@ -14,6 +14,16 @@ Use IoT sensors and smart devices to collect and utilize real-time machine and e
 
 ![Screenshot 2025-04-06 at 4 29 15 PM](https://github.com/user-attachments/assets/387e9605-686b-486e-9e65-e57c11f83d3b)
 
+## Project Architecture Overview
+
+| **Layer**           | **Details**                                                                                                                                               |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Hardware Layer**  | - Arduino + Sensors: Temperature, Pressure, Sound Level<br>- `pyserial`: Streams sensor data to backend via USB                                           |
+| **Backend**         | - Flask (Python): API server for data ingestion, alerts, and smart suggestions<br>- SQLite: Stores sensor logs and maintenance history                    |
+| **ML Layer**        | - Models: XGBoost / Random Forest<br>- Predicts failure causes based on trends<br>- Generates confidence scores and triggers recommendations              |
+| **Frontend**        | - Next.js: Real-time dashboard UI<br>- Tabs: Sensor Readings, Performance, Maintenance, Simulation<br>- Recharts: Line and pie chart visualizations       |
+| **Communication**   | - `pyserial` → Flask: Real-time sensor streaming<br>- Flask → `Next.js`: REST APIs serve data and suggestions                                              |
+
 # Set-up instructions 
 
 ## Installations
@@ -45,3 +55,39 @@ Use IoT sensors and smart devices to collect and utilize real-time machine and e
 The dashboard will be available on localhost
 
 ![Alt text for screen readers](images/screenshot.png "Optional hover title")
+
+
+## Our Impact 
+
+### Minimizes Downtime
+- Detects early signs of abnormal machine behavior for **predictive maintenance**
+- Reduces unplanned breakdowns
+- Boosts overall machine availability
+
+---
+
+### Reduces Operational Costs
+- Prevents emergency repairs that can cost **2x–5x** more than scheduled ones  
+- Avoids losses from sudden halts in production  
+- Optimizes maintenance frequency — **no more over-servicing**
+
+---
+
+### Saves Time & Resources
+- **Real-time alerts** eliminate manual checks — saving **10–15 hours/week/operator**
+- **Dashboard** centralizes machine health data — enabling faster decisions  
+- **Smart suggestions** reduce troubleshooting time by up to **40%**
+- Avoids unexpected failures, saving **$3,000–$10,000 per incident**
+
+---
+
+### Ensures Production Continuity
+- Continuous monitoring with instant notifications  
+- Enables timely intervention to keep production lines running smoothly
+
+---
+
+### Aligns with Honeywell’s Digital Strategy
+- Modernizes legacy machines into **connected, data-driven assets**
+- Supports the vision of a **fully digital and autonomous factory floor**
+
