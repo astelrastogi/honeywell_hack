@@ -5,6 +5,15 @@ from models import get_latest_status
 from datetime import datetime, timedelta
 
 api = Blueprint('api', __name__)
+def generate_sensor_history(current_value: float, unit: str, steps: int = 10):
+    history = []
+    now = datetime.now()
+    for i in range(steps):
+        timestamp = (now - timedelta(minutes=(steps - i) * 3)).strftime("%H:%M")
+        # add small variation around current value
+        value = round(current_value + random.uniform(-1.5, 1.5), 2)
+        history.append({"timestamp": timestamp, "value": value})
+    return history
 
 @api.route('/api/sensor-data', methods=['POST'])
 def ingest_sensor_data():
@@ -70,7 +79,8 @@ def get_machine_data():
                 "value": float(latest_status["temperature"]),
                 "unit": "°C",
                 "status": "normal" if float(latest_status["temperature"]) < 80 else "warning",
-                "history": []
+                "history": generate_sensor_history(float(latest_status["temperature"]), "°C")
+
             },
             {
                 "id": "sensor-002",
@@ -78,7 +88,7 @@ def get_machine_data():
                 "value": float(latest_status["pressure"]),
                 "unit": "PSI",
                 "status": "normal" if float(latest_status["pressure"]) < 140 else "warning",
-                "history": []
+                "history": generate_sensor_history(float(latest_status["pressure"]), "PSI")
             },
             {
                 "id": "sensor-003",
@@ -86,7 +96,7 @@ def get_machine_data():
                 "value": float(latest_status["soundLevel"]),
                 "unit": "dB",
                 "status": "normal" if float(latest_status["soundLevel"]) < 60 else "warning",
-                "history": []
+            "history": generate_sensor_history(float(latest_status["soundLevel"]), "dB")
             },
         ],
         "performance": {
@@ -100,7 +110,32 @@ def get_machine_data():
                 "monthly": []
             }
         },
-        "maintenanceHistory": []
+        "maintenanceHistory": [
+    {
+        "id": "maint-101",
+        "type": "Corrective",
+        "description": "Emergency repair on conveyor system",
+        "date": "2025-01-05T08:45:00Z",
+        "technician": "R. Davis",
+        "duration": 180
+    },
+    {
+        "id": "maint-102",
+        "type": "Preventive",
+        "description": "Monthly inspection and calibration",
+        "date": "2024-12-10T13:30:00Z",
+        "technician": "S. Wilson",
+        "duration": 150
+    },
+    {
+        "id": "maint-103",
+        "type": "Corrective",
+        "description": "Sensor replacement and recalibration",
+        "date": "2024-11-22T09:15:00Z",
+        "technician": "L. Martinez",
+        "duration": 120
+    }
+]
     }
 
     return jsonify(machine_data), 200

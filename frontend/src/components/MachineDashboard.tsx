@@ -4,6 +4,7 @@ import SensorReadings from './SensorReadings';
 import PerformanceMetrics from './PerformanceMetrics';
 import MaintenanceHistory from './MaintenanceHistory';
 import { MachineData } from '../types';
+import CurrentShiftSummary from './CurrentShiftSummary';
 
 interface MachineDashboardProps {
   data: MachineData;
@@ -76,7 +77,9 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
                   {new Date(data.nextMaintenance.date).toLocaleDateString()}
                 </p>
               </div>
+              
             </div>
+            <CurrentShiftSummary />
           </div>
         )}
 
@@ -87,6 +90,7 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
         {activeTab === 'maintenance' && (
           <MaintenanceHistory data={data.maintenanceHistory} />
         )}
+        
       </div>
     </div>
   );
