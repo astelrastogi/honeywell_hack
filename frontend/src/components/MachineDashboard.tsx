@@ -19,6 +19,7 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
     { id: 'performance', label: 'Performance' },
     { id: 'maintenance', label: 'Maintenance History' }
   ];
+  console.log(data);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -82,7 +83,7 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
             <CurrentShiftSummary />
           </div>
         )}
-
+        
         {activeTab === 'sensors' && <SensorReadings data={data.sensors} />}
         {activeTab === 'performance' && (
           <PerformanceMetrics data={data.performance} />
