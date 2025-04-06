@@ -1,3 +1,4 @@
+import random
 from flask import Blueprint, request, jsonify
 import sqlite3
 from models import get_latest_status
@@ -9,9 +10,8 @@ api = Blueprint('api', __name__)
 def ingest_sensor_data():
     data = request.get_json()
     print(data)
-    required_fields = ["temperature", "pressure", 
-                    #    "vibration", "power", "status", "uptime", "efficiency", "operator"
-                    ]
+    required_fields = ["temperature", "pressure", "soundLevel", "waterLevel", "distance", "potentiometer", "status", "uptime", "efficiency", "operator"]
+
     if not all(k in data for k in required_fields):
         return jsonify({"error": "Missing one or more fields"}), 400
 
@@ -20,17 +20,19 @@ def ingest_sensor_data():
     # vibration, power, status, uptime, efficiency, operator
     # ?, ?, ?, ?, ?, ?
     cursor.execute("""
-        INSERT INTO machine_status (timestamp, temperature, pressure)
-        VALUES (datetime('now'), ?, ?)
+        INSERT INTO machine_status (timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator)
+        VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         data["temperature"],
         data["pressure"],
-        # data["vibration"],
-        # data["power"],
-        # data["status"],
-        # data["uptime"],
-        # data["efficiency"],
-        # data["operator"]
+        data["soundLevel"],
+        data["waterLevel"],
+        data["distance"],
+        data["potentiometer"],
+        data["status"],
+        data["uptime"],
+        data["efficiency"],
+        data["operator"]
     ))
     conn.commit()
     conn.close()
@@ -46,17 +48,16 @@ def get_machine_data():
     machine_data = {
         "status": {
             "name": "Production Line A",
-            # "state": latest_status["status"],
-            # "uptime": latest_status["uptime"],
-            # "efficiency": float(latest_status["efficiency"]),
-            # "operatorId": latest_status["operator"],
+            "state": latest_status["status"],
+            "uptime": latest_status["uptime"],
+            "efficiency": float(latest_status["efficiency"].replace('%', '')) if isinstance(latest_status["efficiency"], str) else float(latest_status["efficiency"]),
+            "operatorId": latest_status["operator"],
             "lastUpdate": latest_status["timestamp"]
         },
         "criticalMetrics": [
             {"name": "Temperature", "value": float(latest_status["temperature"]), "unit": "°C", "status": "normal" if float(latest_status["temperature"]) < 80 else "warning"},
             {"name": "Pressure", "value": float(latest_status["pressure"]), "unit": "PSI", "status": "normal" if float(latest_status["pressure"]) < 140 else "warning"},
-            # {"name": "Vibration", "value": float(latest_status["vibration"]), "unit": "mm/s", "status": "normal" if float(latest_status["vibration"]) < 0.4 else "warning"},
-            # {"name": "Power Usage", "value": float(latest_status["power"]), "unit": "kW", "status": "normal" if float(latest_status["power"]) < 60 else "warning"}
+            {"name": "SoundLevel", "value": float(latest_status["soundLevel"]), "unit": "dB", "status": "normal" if float(latest_status["soundLevel"]) < 60 else "warning"}
         ],
         "nextMaintenance": {
             "description": "Scheduled lubrication and bearing inspection",
@@ -79,34 +80,26 @@ def get_machine_data():
                 "status": "normal" if float(latest_status["pressure"]) < 140 else "warning",
                 "history": []
             },
-            # {
-            #     "id": "sensor-003",
-            #     "name": "Main Shaft Vibration",
-            #     "value": float(latest_status["vibration"]),
-            #     "unit": "mm/s",
-            #     "status": "normal" if float(latest_status["vibration"]) < 0.4 else "warning",
-            #     "history": []
-            # },
-            # {
-            #     "id": "sensor-004",
-            #     "name": "Power Consumption",
-            #     "value": float(latest_status["power"]),
-            #     "unit": "kW",
-            #     "status": "normal" if float(latest_status["power"]) < 60 else "warning",
-            #     "history": []
-            # }
+            {
+                "id": "sensor-003",
+                "name": "Sound Level Sensor",
+                "value": float(latest_status["soundLevel"]),
+                "unit": "dB",
+                "status": "normal" if float(latest_status["soundLevel"]) < 60 else "warning",
+                "history": []
+            },
         ],
-        # "performance": {
-        #     "overallEfficiency": float(latest_status["efficiency"]),
-        #     "productionRate": 142,
-        #     "qualityRate": 98.3,
-        #     "downtime": 3.2,
-        #     "trends": {
-        #         "daily": [],
-        #         "weekly": [],
-        #         "monthly": []
-        #     }
-        # },
+        "performance": {
+            "overallEfficiency": round(random.uniform(80, 95), 1),
+            "productionRate": 142,
+            "qualityRate": 98.3,
+            "downtime": 3.2,
+            "trends": {
+                "daily": [],
+                "weekly": [],
+                "monthly": []
+            }
+        },
         "maintenanceHistory": []
     }
 
@@ -147,18 +140,17 @@ def get_suggestions():
             ]
         })
 
-    # Check for high vibration
-    # if float(latest_status["vibration"]) > 0.4:
-    #     suggestions.append({
-    #         "id": "sug-003",
-    #         "title": "Bearing Wear Detected",
-    #         "description": f"Vibration is at {latest_status['vibration']} mm/s, indicating potential bearing wear.",
-    #         "priority": "low",
-    #         "impacts": [
-    #             {"type": "positive", "description": "Extend bearing life by addressing early"},
-    #             {"type": "positive", "description": "Optimize maintenance scheduling"},
-    #             {"type": "positive", "description": "Prevent unexpected failures"}
-    #         ]
-    #     })
+    # Check for low water level
+    if float(latest_status["waterLevel"]) < 20:
+        suggestions.append({
+            "id": "sug-003",
+            "title": "Low Water Level Alert",
+            "description": f"Water level is at {latest_status['waterLevel']}%, which may affect cooling.",
+            "priority": "medium",
+            "impacts": [
+                {"type": "positive", "description": "Prevent overheating and maintain system integrity"},
+                {"type": "negative", "description": "Requires immediate attention"}
+            ]
+        })
 
     return jsonify(suggestions), 200

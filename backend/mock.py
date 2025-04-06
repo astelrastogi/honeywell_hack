@@ -8,12 +8,23 @@ def generate_and_post_mock_data():
         data = {
             "temperature": round(random.uniform(65, 85), 1),  # 65-85 °C
             "pressure": round(random.uniform(120, 150), 1),   # 120-150 PSI
+<<<<<<< Updated upstream
             # "vibration": round(random.uniform(0.1, 0.5), 2),  # 0.1-0.5 mm/s
             # "power": round(random.uniform(45, 65), 1),        # 45-65 kW
             # "status": "operational",
             # "uptime": "14d 6h 23m",
             # "efficiency": round(random.uniform(80, 95), 1),   # 80-95%
             # "operator": "OP-4872"
+=======
+            "soundLevel": round(random.uniform(50, 70), 1),   # 50-70 dB
+            "waterLevel": round(random.uniform(0, 100), 1),   # 0-100%
+            "distance": round(random.uniform(0, 10), 1),      # 0-10 m
+            "potentiometer": round(random.uniform(0, 100), 1), # 0-100%
+            "status": random.choice(["running", "scheduled", "stopped"]),
+            "uptime": f"{random.randint(1, 72)} hrs",
+            "efficiency": round(random.uniform(80, 95), 1),
+            "operator": f"OP-{random.randint(0, 4999)}",      # Random operator ID
+>>>>>>> Stashed changes
         }
 
         # Post the data to the /api/sensor-data endpoint

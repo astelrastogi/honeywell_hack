@@ -6,7 +6,11 @@ def get_latest_status():
     cursor = conn.cursor()
 
     cursor.execute("""
+<<<<<<< Updated upstream
         SELECT timestamp, temperature, pressure
+=======
+        SELECT timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator
+>>>>>>> Stashed changes
         FROM machine_status
         ORDER BY timestamp DESC
         LIMIT 1
@@ -18,6 +22,7 @@ def get_latest_status():
     if not row:
         return None
     return dict(row)
+<<<<<<< Updated upstream
     # return {
     #     "timestamp": row["timestamp"],
     #     "temperature": f"{row['temperature']} °C",
@@ -30,4 +35,6 @@ def get_latest_status():
     #     "operator": row["operator"],
     #     "message": "Data loaded from database!"
     # }
+=======
+>>>>>>> Stashed changes
 
