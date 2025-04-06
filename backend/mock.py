@@ -28,11 +28,11 @@ def read_from_arduino(ser):
                 data = json.loads(json_str)
                 return data  # Return full dict
             except json.JSONDecodeError as e:
-                print("🚫 JSON parsing failed:", e)
+                print("JSON parsing failed:", e)
         else:
-            print("⚠️ Ignored non-JSON line:", line)
+            print("Ignored non-JSON line:", line)
     except Exception as e:
-        print("🚫 Error reading/parsing line:", e)
+        print("Error reading/parsing line:", e)
     return None
 
 def read_latest_from_arduino(ser):
@@ -62,11 +62,11 @@ def post_sensor_data(data):
         print(response.text)
 
         if response.status_code == 200:
-            print("✅ Posted to API:", data)
+            print("Posted to API:", data)
         else:
-            print("❌ Failed to post:", response.status_code, response.text)
+            print("Failed to post:", response.status_code, response.text)
     except Exception as e:
-        print("🚫 Error posting sensor data:", e)
+        print("Error posting sensor data:", e)
 
 def main():
     try:
@@ -81,7 +81,7 @@ def main():
                     post_sensor_data(sensor_data)
                 time.sleep(0.1)  # Faster polling to reduce lag
     except serial.SerialException as e:
-        print("🔌 Serial connection error:", e)
+        print("Serial connection error:", e)
 
 if __name__ == "__main__":
     main()
