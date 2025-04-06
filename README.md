@@ -31,6 +31,7 @@ Use IoT sensors and smart devices to collect and utilize real-time machine and e
 
 ### Send data from IOT sensors to Database 
 `cd backend`
+
 `python mock.py`
 
 The dashboard will be available on [localhost:3000](http://localhost:3000/)
