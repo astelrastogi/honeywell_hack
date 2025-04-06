@@ -89,7 +89,9 @@ The dashboard will be available on localhost
 - Supports the vision of a **fully digital and autonomous factory floor**
 - 
 
-## Screenshots
+## Demo & Screenshots
+▶️ [Watch Demo Video](video/demo.mp4)
+
 ![dashboard image](images/screenshot1.png "dashboard")
 ![dashboard image](images/screenshot2.png "dashboard")
 ![dashboard image](images/screenshot3.png "dashboard")
