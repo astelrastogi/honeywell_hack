@@ -19,21 +19,6 @@ def ingest_sensor_data():
 
     conn = sqlite3.connect("db.sqlite3")
     cursor = conn.cursor()
-    # cursor.execute("""
-    #     INSERT INTO machine_status (timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator)
-    #     VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    # """, (
-    #     data["temperature"],
-    #     data["pressure"],
-    #     data["soundLevel"],
-    #     data["waterLevel"],
-    #     data["distance"],
-    #     data["potentiometer"],
-    #     data["status"],
-    #     data["uptime"],
-    #     data["efficiency"],
-    #     data["operator"]
-    # ))
     cursor.execute("""
         INSERT INTO machine_status (timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator)
         VALUES (datetime('now'), :temperature, :pressure, :soundLevel, :waterLevel, :distance, :potentiometer, :status, :uptime, :efficiency, :operator)
@@ -176,7 +161,7 @@ def get_suggestions():
         suggestions.append({
             "id": "sug-004",
             "title": "CNC Motor Failure",
-            "description": "❌ CNC MOTOR FAILURE: Tool went beyond the limit, Emergency stop triggered",
+            "description": "CNC MOTOR FAILURE: Tool went beyond the limit, Emergency stop triggered",
             "priority": "critical",
             "impacts": [
                 {"type": "negative", "description": "Immediate shutdown required to prevent further damage"},

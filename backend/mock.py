@@ -4,9 +4,9 @@ import time
 import serial
 import json
 
-SERIAL_PORT = '/dev/tty.usbmodem11201'  # Update if needed
+SERIAL_PORT = '/dev/tty.usbmodem11201'  
 BAUD_RATE = 9600
-API_URL = 'http://localhost:5002/api/sensor-data'  # Update if needed
+API_URL = 'http://localhost:5002/api/sensor-data'  
 
 # Record the start time for uptime calculation
 start_time = time.time()
@@ -48,12 +48,8 @@ def add_extra_sensor_data(data):
     # Set fixed values and calculate uptime
     data["status"] = random.choice(["running", "scheduled", "stopped"])
     data["uptime"] = f"{random.randint(1, 72)} hrs"
-    data["efficiency"] = round(random.uniform(80, 95), 1)      # Fixed efficiency, change if needed
-    data["operator"] = f"OP-{random.randint(0, 4999)}" # Fixed operator, change if needed
-    # "status": random.choice(["running", "scheduled", "stopped"]),
-    #         "uptime": f"{random.randint(1, 72)} hrs",
-    #         "efficiency": round(random.uniform(80, 95), 1),
-    #         "operator": f"OP-{random.randint(0, 4999)}",      # Random operator ID
+    data["efficiency"] = round(random.uniform(80, 95), 1)      
+    data["operator"] = f"OP-{random.randint(0, 4999)}" 
     return data
 
 def post_sensor_data(data):
@@ -71,7 +67,7 @@ def post_sensor_data(data):
 def main():
     try:
         with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.5) as ser:
-            print("📡 Listening to Arduino on", SERIAL_PORT)
+            print("Listening to Arduino on", SERIAL_PORT)
             time.sleep(2)  # Let Arduino reset
             while True:
                 # Drain the buffer and keep only the most recent valid message
