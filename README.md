@@ -95,7 +95,6 @@ The dashboard will be available on localhost
 ![dashboard image](images/screenshot1.png "dashboard")
 ![dashboard image](images/screenshot2.png "dashboard")
 ![dashboard image](images/screenshot3.png "dashboard")
-![dashboard image](images/screenshot4.png "dashboard")
 ![dashboard image](images/screenshot5.png "dashboard")
 ![dashboard image](images/screenshot6.png "dashboard")
 ![dashboard image](images/screenshot7.png "dashboard")
