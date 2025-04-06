@@ -5,29 +5,20 @@ from models import get_latest_status
 from datetime import datetime, timedelta
 
 api = Blueprint('api', __name__)
-def generate_sensor_history(current_value: float, unit: str, steps: int = 10):
-    history = []
-    now = datetime.now()
-    for i in range(steps):
-        timestamp = (now - timedelta(minutes=(steps - i) * 3)).strftime("%H:%M")
-        # add small variation around current value
-        value = round(current_value + random.uniform(-1.5, 1.5), 2)
-        history.append({"timestamp": timestamp, "value": value})
-    return history
+
 
 @api.route('/api/sensor-data', methods=['POST'])
 def ingest_sensor_data():
     data = request.get_json()
     print(data)
-    required_fields = ["temperature", "pressure", "soundLevel", "waterLevel", "distance", "potentiometer", "status", "uptime", "efficiency", "operator"]
+    required_fields = ["temperature", "pressure", "soundLevel", "waterLevel", "distance", "potentiometer", "status",
+                       "uptime", "efficiency", "operator"]
 
     if not all(k in data for k in required_fields):
         return jsonify({"error": "Missing one or more fields"}), 400
 
     conn = sqlite3.connect("db.sqlite3")
     cursor = conn.cursor()
-    # vibration, power, status, uptime, efficiency, operator
-    # ?, ?, ?, ?, ?, ?
     # cursor.execute("""
     #     INSERT INTO machine_status (timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator)
     #     VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -63,6 +54,7 @@ def ingest_sensor_data():
 
     return jsonify({"message": "Sensor data stored successfully"}), 200
 
+
 @api.route('/api/machine-data', methods=['GET'])
 def get_machine_data():
     latest_status = get_latest_status()
@@ -74,15 +66,20 @@ def get_machine_data():
             "name": "Production Line A",
             "state": latest_status["status"],
             "uptime": latest_status["uptime"],
-            "efficiency": float(latest_status["efficiency"].replace('%', '')) if isinstance(latest_status["efficiency"], str) else float(latest_status["efficiency"]),
+            "efficiency": float(latest_status["efficiency"].replace('%', '')) if isinstance(latest_status["efficiency"],
+                                                                                            str) else float(
+                latest_status["efficiency"]),
             "operatorId": latest_status["operator"],
             "lastUpdate": latest_status["timestamp"],
             "waterLevel": float(latest_status["waterLevel"])
         },
         "criticalMetrics": [
-            {"name": "Temperature", "value": float(latest_status["temperature"]), "unit": "°C", "status": "normal" if float(latest_status["temperature"]) < 80 else "warning"},
-            {"name": "Pressure", "value": float(latest_status["pressure"]), "unit": "PSI", "status": "normal" if float(latest_status["pressure"]) < 140 else "warning"},
-            {"name": "SoundLevel", "value": float(latest_status["soundLevel"]), "unit": "dB", "status": "normal" if float(latest_status["soundLevel"]) < 60 else "warning"}
+            {"name": "Temperature", "value": float(latest_status["temperature"]), "unit": "°C",
+             "status": "normal" if float(latest_status["temperature"]) < 80 else "warning"},
+            {"name": "Pressure", "value": float(latest_status["pressure"]), "unit": "%",
+             "status": "normal" if float(latest_status["pressure"]) < 140 else "warning"},
+            {"name": "SoundLevel", "value": float(latest_status["soundLevel"]), "unit": "dB",
+             "status": "normal" if float(latest_status["soundLevel"]) < 60 else "warning"}
         ],
         "nextMaintenance": {
             "description": "Scheduled lubrication and bearing inspection",
@@ -95,8 +92,7 @@ def get_machine_data():
                 "value": float(latest_status["temperature"]),
                 "unit": "°C",
                 "status": "normal" if float(latest_status["temperature"]) < 80 else "warning",
-                "history": generate_sensor_history(float(latest_status["temperature"]), "°C")
-
+                "history": []
             },
             {
                 "id": "sensor-002",
@@ -104,7 +100,7 @@ def get_machine_data():
                 "value": float(latest_status["pressure"]),
                 "unit": "PSI",
                 "status": "normal" if float(latest_status["pressure"]) < 140 else "warning",
-                "history": generate_sensor_history(float(latest_status["pressure"]), "PSI")
+                "history": []
             },
             {
                 "id": "sensor-003",
@@ -112,7 +108,7 @@ def get_machine_data():
                 "value": float(latest_status["soundLevel"]),
                 "unit": "dB",
                 "status": "normal" if float(latest_status["soundLevel"]) < 60 else "warning",
-            "history": generate_sensor_history(float(latest_status["soundLevel"]), "dB")
+                "history": []
             },
         ],
         "performance": {
@@ -126,35 +122,11 @@ def get_machine_data():
                 "monthly": []
             }
         },
-        "maintenanceHistory": [
-    {
-        "id": "maint-101",
-        "type": "Corrective",
-        "description": "Emergency repair on conveyor system",
-        "date": "2025-01-05T08:45:00Z",
-        "technician": "R. Davis",
-        "duration": 180
-    },
-    {
-        "id": "maint-102",
-        "type": "Preventive",
-        "description": "Monthly inspection and calibration",
-        "date": "2024-12-10T13:30:00Z",
-        "technician": "S. Wilson",
-        "duration": 150
-    },
-    {
-        "id": "maint-103",
-        "type": "Corrective",
-        "description": "Sensor replacement and recalibration",
-        "date": "2024-11-22T09:15:00Z",
-        "technician": "L. Martinez",
-        "duration": 120
-    }
-]
+        "maintenanceHistory": []
     }
 
     return jsonify(machine_data), 200
+
 
 @api.route('/api/suggestions', methods=['GET'])
 def get_suggestions():
@@ -164,12 +136,20 @@ def get_suggestions():
 
     suggestions = []
 
+    # Convert the timestamp to a datetime object.
+    # (Assuming latest_status["timestamp"] is in ISO format.)
+    sensor_time = datetime.fromisoformat(latest_status["timestamp"])
+
+    # Only add suggestions if the sensor data is fresh (within 4 seconds)
+    if datetime.now() - sensor_time > timedelta(seconds=4):
+        return jsonify(suggestions), 200
+
     # Check for high pressure
     if float(latest_status["pressure"]) > 140:
         suggestions.append({
             "id": "sug-001",
             "title": "Hydraulic System Pressure Alert",
-            "description": f"Hydraulic pressure is at {latest_status['pressure']} PSI, which is above the optimal range.",
+            "description": f"Humidity is at {latest_status['pressure']} %, which is above the optimal range.",
             "priority": "high",
             "impacts": [
                 {"type": "positive", "description": "Prevent unexpected downtime (est. 4-8 hours)"},
@@ -179,7 +159,7 @@ def get_suggestions():
         })
 
     # Check for high temperature
-    if float(latest_status["temperature"]) > 80:
+    if float(latest_status["temperature"]) > 30:
         suggestions.append({
             "id": "sug-002",
             "title": "High Temperature Warning",
@@ -191,15 +171,28 @@ def get_suggestions():
             ]
         })
 
+    # Check for CNC Motor Failure when distance is greater than 10
+    if float(latest_status["distance"]) > 10:
+        suggestions.append({
+            "id": "sug-004",
+            "title": "CNC Motor Failure",
+            "description": "❌ CNC MOTOR FAILURE: Tool went beyond the limit, Emergency stop triggered",
+            "priority": "critical",
+            "impacts": [
+                {"type": "negative", "description": "Immediate shutdown required to prevent further damage"},
+                {"type": "negative", "description": "Risk of damage to CNC machine and tooling"}
+            ]
+        })
+
     # Check for low water level
-    if float(latest_status["waterLevel"]) < 20:
+    if float(latest_status["waterLevel"]) > 20:
         suggestions.append({
             "id": "sug-003",
-            "title": "Low Water Level Alert",
-            "description": f"Water level is at {latest_status['waterLevel']}%, which may affect cooling.",
+            "title": "Water Level Alert",
+            "description": f"Water level is at {latest_status['waterLevel']}%.",
             "priority": "medium",
             "impacts": [
-                {"type": "positive", "description": "Prevent overheating and maintain system integrity"},
+                {"type": "positive", "description": "Coolant leak detected at CNC Machine"},
                 {"type": "negative", "description": "Requires immediate attention"}
             ]
         })

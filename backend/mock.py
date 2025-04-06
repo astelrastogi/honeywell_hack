@@ -63,7 +63,6 @@ def post_sensor_data(data):
 
         if response.status_code == 200:
             print("✅ Posted to API:", data)
-            
         else:
             print("❌ Failed to post:", response.status_code, response.text)
     except Exception as e:
