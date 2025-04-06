@@ -90,7 +90,7 @@ The dashboard will be available on localhost
 - 
 
 ## Demo & Screenshots
-▶️ [Watch Demo Video](demo.mp4)
+[Download & Watch Demo Video](demo.mp4)
 
 ![dashboard image](images/screenshot1.png "dashboard")
 ![dashboard image](images/screenshot2.png "dashboard")
