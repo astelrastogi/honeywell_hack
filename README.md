@@ -19,4 +19,4 @@
 
 `npm run dev`
 
-The dashboard will be available on [localhost:5002](http://localhost:3000/)
+The dashboard will be available on [localhost:3000](http://localhost:3000/)
