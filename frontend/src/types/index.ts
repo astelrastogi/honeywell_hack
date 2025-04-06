@@ -44,6 +44,7 @@ export interface Metric {
       efficiency: number;
       operatorId: string;
       lastUpdate: string;
+      waterLevel: number;
     };
     criticalMetrics: Metric[];
     nextMaintenance: {

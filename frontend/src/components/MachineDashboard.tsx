@@ -65,6 +65,24 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
                   </div>
                 ))}
               </div>
+              {/* Water Level Card */}
+    <div className="bg-gray-50 p-4 rounded-lg">
+      <h3 className="text-lg font-medium mb-2">Water Level</h3>
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600">Current Water Level</span>
+        <span
+          className={`font-medium ${
+            data.status.waterLevel > 40
+              ? 'text-green-600'
+              : data.status.waterLevel > 20
+              ? 'text-yellow-600'
+              : 'text-red-600'
+          }`}
+        >
+          {data.status.waterLevel}%
+        </span>
+      </div>
+    </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-medium mb-2">
                   Next Scheduled Maintenance

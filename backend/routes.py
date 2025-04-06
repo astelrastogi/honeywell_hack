@@ -28,21 +28,36 @@ def ingest_sensor_data():
     cursor = conn.cursor()
     # vibration, power, status, uptime, efficiency, operator
     # ?, ?, ?, ?, ?, ?
+    # cursor.execute("""
+    #     INSERT INTO machine_status (timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator)
+    #     VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    # """, (
+    #     data["temperature"],
+    #     data["pressure"],
+    #     data["soundLevel"],
+    #     data["waterLevel"],
+    #     data["distance"],
+    #     data["potentiometer"],
+    #     data["status"],
+    #     data["uptime"],
+    #     data["efficiency"],
+    #     data["operator"]
+    # ))
     cursor.execute("""
         INSERT INTO machine_status (timestamp, temperature, pressure, soundLevel, waterLevel, distance, potentiometer, status, uptime, efficiency, operator)
-        VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        data["temperature"],
-        data["pressure"],
-        data["soundLevel"],
-        data["waterLevel"],
-        data["distance"],
-        data["potentiometer"],
-        data["status"],
-        data["uptime"],
-        data["efficiency"],
-        data["operator"]
-    ))
+        VALUES (datetime('now'), :temperature, :pressure, :soundLevel, :waterLevel, :distance, :potentiometer, :status, :uptime, :efficiency, :operator)
+    """, {
+        'temperature': data["temperature"],
+        'pressure': data["pressure"],
+        'soundLevel': data["soundLevel"],
+        'waterLevel': data["waterLevel"],
+        'distance': data["distance"],
+        'potentiometer': data["potentiometer"],
+        'status': data["status"],
+        'uptime': data["uptime"],
+        'efficiency': data["efficiency"],
+        'operator': data["operator"]
+    })
     conn.commit()
     conn.close()
 
@@ -61,7 +76,8 @@ def get_machine_data():
             "uptime": latest_status["uptime"],
             "efficiency": float(latest_status["efficiency"].replace('%', '')) if isinstance(latest_status["efficiency"], str) else float(latest_status["efficiency"]),
             "operatorId": latest_status["operator"],
-            "lastUpdate": latest_status["timestamp"]
+            "lastUpdate": latest_status["timestamp"],
+            "waterLevel": float(latest_status["waterLevel"])
         },
         "criticalMetrics": [
             {"name": "Temperature", "value": float(latest_status["temperature"]), "unit": "°C", "status": "normal" if float(latest_status["temperature"]) < 80 else "warning"},
