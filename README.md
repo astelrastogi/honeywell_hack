@@ -54,9 +54,6 @@ Use IoT sensors and smart devices to collect and utilize real-time machine and e
 
 The dashboard will be available on localhost
 
-![Alt text for screen readers](images/screenshot.png "Optional hover title")
-
-
 ## Our Impact 
 
 ### Minimizes Downtime
@@ -90,4 +87,19 @@ The dashboard will be available on localhost
 ### Aligns with Honeywell’s Digital Strategy
 - Modernizes legacy machines into **connected, data-driven assets**
 - Supports the vision of a **fully digital and autonomous factory floor**
+- 
+
+## Screenshots
+![dashboard image](images/screenshot1.png "dashboard")
+![dashboard image](images/screenshot2.png "dashboard")
+![dashboard image](images/screenshot3.png "dashboard")
+![dashboard image](images/screenshot4.png "dashboard")
+![dashboard image](images/screenshot5.png "dashboard")
+![dashboard image](images/screenshot6.png "dashboard")
+![dashboard image](images/screenshot7.png "dashboard")
+![dashboard image](images/screenshot8.png "dashboard")
+
+
+
+
 
