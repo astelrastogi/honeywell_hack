@@ -1,4 +1,9 @@
-# honeywell_hack
+# Orbitrons
+
+Factories need to evolve into smart, automated, and data-driven environments. Current systems lack real-time monitoring, leading to downtime, inefficient resource use, and poor visibility into machine health.
+ 
+## The challenge:
+Use IoT sensors and smart devices to collect and utilize real-time machine and environmental data, enabling better operational insights, predictive maintenance, saving on cost and time, and improved decision-making.
 
 
 # Set up instructions 
