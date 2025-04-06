@@ -37,6 +37,8 @@ export interface Metric {
   }  
   
   export interface MachineData {
+    id: string;
+    name: string;
     status: {
       name: string;
       state: string;
@@ -70,8 +72,23 @@ export interface Metric {
       technician: string;
       duration: number;
     }[];
+    shifts: ShiftData[];
   }
-  
+
+  export interface ShiftData {
+    shiftId: string;
+    name: string;
+    startTime: string;
+    endTime: string;
+    operator: string;
+    currentPart: string;
+    statusRuntime: StatusRuntime[];
+  }
+
+  export interface StatusRuntime {
+    status: string;
+    time: number;
+  }
 
   export interface Sensor {
     id: string;

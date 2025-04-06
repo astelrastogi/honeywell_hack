@@ -3,15 +3,18 @@ import MachineStatus from './MachineStatus';
 import SensorReadings from './SensorReadings';
 import PerformanceMetrics from './PerformanceMetrics';
 import MaintenanceHistory from './MaintenanceHistory';
+import ShiftStatusTable from './ShiftStatus';
 import { MachineData } from '../types';
 import CurrentShiftSummary from './CurrentShiftSummary';
 
 interface MachineDashboardProps {
-  data: MachineData;
+//   data: MachineData;
+    machines: MachineData[]; 
 }
 
-const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
+const MachineDashboard: React.FC<MachineDashboardProps> = ({ machines }) => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedMachineId, setSelectedMachineId] = useState<string>(machines[0]?.id || '');
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
@@ -21,8 +24,32 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
   ];
   console.log(data);
 
+  const selectedMachine = machines.find(machine => machine.id === selectedMachineId) || machines[0];
+
+  const handleMachineChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMachineId(event.target.value);
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-grey rounded-lg shadow-md p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Machine Dashboard</h2>
+        <div className="flex items-center">
+          <label htmlFor="machine-selector" className="mr-2 text-gray-600">Select Machine:</label>
+          <select
+            id="machine-selector"
+            value={selectedMachineId}
+            onChange={handleMachineChange}
+            className="border rounded-md py-1 px-3 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {machines.map(machine => (
+              <option key={machine.id} value={machine.id}>
+                {machine.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
       <div className="flex border-b mb-6">
         {tabs.map(tab => (
           <button
@@ -42,11 +69,11 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
       <div className="tab-content">
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <MachineStatus data={data.status} />
+            <MachineStatus data={selectedMachine.status} />
             <div className="grid grid-cols-1 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-medium mb-2">Critical Metrics</h3>
-                {data.criticalMetrics.map((metric, index) => (
+                {selectedMachine.criticalMetrics.map((metric, index) => (
                   <div
                     key={index}
                     className="flex justify-between items-center mb-2 last:mb-0"
@@ -71,11 +98,11 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
                   Next Scheduled Maintenance
                 </h3>
                 <p className="text-gray-800">
-                  {data.nextMaintenance.description}
+                  {selectedMachine.nextMaintenance.description}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">
                   Scheduled:{' '}
-                  {new Date(data.nextMaintenance.date).toLocaleDateString()}
+                  {new Date(selectedMachine.nextMaintenance.date).toLocaleDateString()}
                 </p>
               </div>
               
@@ -85,11 +112,12 @@ const MachineDashboard: React.FC<MachineDashboardProps> = ({ data }) => {
         )}
         
         {activeTab === 'sensors' && <SensorReadings data={data.sensors} />}
+
         {activeTab === 'performance' && (
-          <PerformanceMetrics data={data.performance} />
+          <PerformanceMetrics data={selectedMachine.performance} />
         )}
         {activeTab === 'maintenance' && (
-          <MaintenanceHistory data={data.maintenanceHistory} />
+          <MaintenanceHistory data={selectedMachine.maintenanceHistory} />
         )}
         
       </div>
