@@ -87,7 +87,6 @@ The dashboard will be available on localhost
 ### Aligns with Honeywell’s Digital Strategy
 - Modernizes legacy machines into **connected, data-driven assets**
 - Supports the vision of a **fully digital and autonomous factory floor**
-- 
 
 ## Demo & Screenshots
 [Download & Watch Demo Video](demo.mp4)
